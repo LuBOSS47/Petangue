@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Rezervace Petanque</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+  <meta name="theme-color" content="#2e8b57">
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #e6e6e6;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      color: #555;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #2e8b57;
+      color: white;
+      border: none;
+      margin-top: 1.5rem;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+      background: #f0f0f0;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    li {
+      margin: 0.5rem 0;
+    }
+
+    .reserved {
+      color: red;
+    }
+
+    .confirmation {
+      margin-top: 1rem;
+      color: green;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Rezervace Petanque</h2>
+
+    <label for="date">Vyber datum:</label>
+    <input type="date" id="date" onchange="loadReservations()">
+
+    <label for="time">Vyber čas:</label>
+    <select id="time"></select>
+
+    <label for="phone">Telefon:</label>
+    <input type="tel" id="phone" placeholder="+420...">
+
+    <button onclick="submitReservation()">Rezervovat</button>
+
+    <div class="confirmation" id="confirmation"></div>
+
+    <h3>Rezervace pro vybraný den:</h3>
+    <ul id="reservationList"></ul>
+  </div>
+
+  <script>
+    const times = ["14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"];
+    const reservations = {}; // uložené v paměti
+
+    function loadReservations() {
+      const date = document.getElementById("date").value;
+      const list = document.getElementById("reservationList");
+      const timeSelect = document.getElementById("time");
+      list.innerHTML = "";
+      timeSelect.innerHTML = "";
+
+      if (!date) return;
+
+      const booked = reservations[date] || [];
+
+      times.forEach(time => {
+        const li = document.createElement("li");
+        li.textContent = time + (booked.includes(time) ? " – obsazeno" : " – volné");
+        if (booked.includes(time)) li.classList.add("reserved");
+        list.appendChild(li);
+      });
+
+      times.forEach(time => {
+        if (!booked.includes(time)) {
+          const opt = document.createElement("option");
+          opt.value = time;
+          opt.textContent = time;
+          timeSelect.appendChild(opt);
+        }
+      });
+    }
+
+    function submitReservation() {
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+      const phone = document.getElementById("phone").value;
+
+      if (!date || !time || !phone) {
+        alert("Vyplň všechna pole, Einstein.");
+        return;
+      }
+
+      if (!reservations[date]) reservations[date] = [];
+
+      if (reservations[date].includes(time)) {
+        alert("Čas už je zabraný. Zkus jiný.");
+        return;
+      }
+
+      reservations[date].push(time);
+      document.getElementById("confirmation").textContent = `Rezervace potvrzena na ${date} v ${time}.`;
+      loadReservations();
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log("Service Worker OK"))
+        .catch(err => console.error("Service Worker FAIL", err));
+    }
+
+    document.getElementById("date").valueAsDate = new Date();
+    loadReservations();
+  </script>
+</body>
+</html>
