@@ -1,8 +1,7 @@
 petanque-reservations/
-├── index.html        ← hlavní stránka
-├── styles.css        ← (volitelně) oddělené CSS
-├── sw.js             ← service worker pro PWA
-├── manifest.json     ← PWA konfigurace
-├── icon-192.png      ← ikona pro mobilní zařízení
-├── icon-512.png      ← větší verze ikony
-└── README.md         ← popis projektu
+├── index.html          ✅ HLAVNÍ KÓD STRÁNKY
+├── manifest.json       ✅ Konfigurace pro PWA
+├── sw.js               ✅ Service worker
+├── icon-192.png        ✅ Malá ikona pro mobilní appku
+├── icon-512.png        ✅ Větší ikona
+├── README.md           (nepovinné, ale fajn)
