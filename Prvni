@@ -1,6 +1,8 @@
-index.html
-manifest.json
-sw.js
-icon-192.png
-icon-512.png
-README.md
+petanque-reservations/
+├── index.html        ← hlavní stránka
+├── styles.css        ← (volitelně) oddělené CSS
+├── sw.js             ← service worker pro PWA
+├── manifest.json     ← PWA konfigurace
+├── icon-192.png      ← ikona pro mobilní zařízení
+├── icon-512.png      ← větší verze ikony
+└── README.md         ← popis projektu
